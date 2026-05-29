@@ -75,16 +75,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
+      { title: "LivingLab Sicani" },
       { name: "description", content: "Consortium Showcase is a website designed to act as a digital storefront for a consortium." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
+      { property: "og:title", content: "LivingLab Sicani" },
       { property: "og:description", content: "Consortium Showcase is a website designed to act as a digital storefront for a consortium." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "Lovable App" },
+      { name: "twitter:title", content: "LivingLab Sicani" },
       { name: "twitter:description", content: "Consortium Showcase is a website designed to act as a digital storefront for a consortium." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/27a097c3-474d-40ba-9c9f-daa74eb37070/id-preview-684af014--8d160d31-e8d3-4696-8460-0c187d803fb3.lovable.app-1780059118904.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/27a097c3-474d-40ba-9c9f-daa74eb37070/id-preview-684af014--8d160d31-e8d3-4696-8460-0c187d803fb3.lovable.app-1780059118904.png" },
     ],
     links: [
       {
