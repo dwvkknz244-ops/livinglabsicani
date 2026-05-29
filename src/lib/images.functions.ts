@@ -25,18 +25,11 @@ export const setImageOverride = createServerFn({ method: "POST" })
       })
       .parse(input),
   )
-  .handler(async ({ data, context }) => {
-    const { data: roleData } = await context.supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", context.userId)
-      .eq("role", "admin")
-      .maybeSingle();
-    if (!roleData) throw new Error("Forbidden");
-
+  .handler(async ({ data }) => {
     const { error } = await supabaseAdmin
       .from("image_overrides")
       .upsert({ key: data.key, url: data.url, updated_at: new Date().toISOString() });
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
