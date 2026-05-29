@@ -40,8 +40,7 @@ export const getPageBlocksAdmin = createServerFn({ method: "GET" })
   .inputValidator((input: { page: string }) =>
     z.object({ page: z.string().min(1).max(60).regex(PAGE_RE) }).parse(input),
   )
-  .handler(async ({ data, context }) => {
-    await assertAdmin(context);
+  .handler(async ({ data }) => {
     const { data: rows, error } = await supabaseAdmin
       .from("page_blocks")
       .select("*")
@@ -71,8 +70,7 @@ const blockSchema = z.object({
 export const upsertPageBlock = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input) => blockSchema.parse(input))
-  .handler(async ({ data, context }) => {
-    await assertAdmin(context);
+  .handler(async ({ data }) => {
     const payload = {
       page: data.page,
       sort_order: data.sort_order,
@@ -104,8 +102,7 @@ export const deletePageBlock = createServerFn({ method: "POST" })
   .inputValidator((input: { id: string }) =>
     z.object({ id: z.string().uuid() }).parse(input),
   )
-  .handler(async ({ data, context }) => {
-    await assertAdmin(context);
+  .handler(async ({ data }) => {
     const { error } = await supabaseAdmin.from("page_blocks").delete().eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true };
@@ -116,8 +113,7 @@ export const reorderPageBlock = createServerFn({ method: "POST" })
   .inputValidator((input: { id: string; sort_order: number }) =>
     z.object({ id: z.string().uuid(), sort_order: z.number().int().min(0).max(100000) }).parse(input),
   )
-  .handler(async ({ data, context }) => {
-    await assertAdmin(context);
+  .handler(async ({ data }) => {
     const { error } = await supabaseAdmin
       .from("page_blocks")
       .update({ sort_order: data.sort_order })
