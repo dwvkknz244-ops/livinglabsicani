@@ -1,0 +1,144 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Instrument Sans", ui-serif, Georgia, serif;
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-fade-up: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+:root {
+  --radius: 0.875rem;
+
+  /* Neutral warm off-white + viola accent #8685FD */
+  --background: oklch(0.985 0.003 90);
+  --foreground: oklch(0.18 0.012 270);
+
+  --surface: oklch(0.97 0.004 80);
+  --surface-muted: oklch(0.94 0.005 80);
+  --ink: oklch(0.18 0.012 270);
+  --ink-muted: oklch(0.5 0.02 270);
+
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.18 0.012 270);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.18 0.012 270);
+
+  --primary: oklch(0.2 0.015 270);
+  --primary-foreground: oklch(0.985 0.003 90);
+
+  --secondary: oklch(0.95 0.005 80);
+  --secondary-foreground: oklch(0.18 0.012 270);
+
+  --muted: oklch(0.95 0.005 80);
+  --muted-foreground: oklch(0.5 0.02 270);
+
+  /* Accent viola #8685FD */
+  --accent: oklch(0.71 0.16 285);
+  --accent-foreground: oklch(0.99 0 0);
+
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.99 0 0);
+
+  --border: oklch(0.9 0.005 270);
+  --input: oklch(0.9 0.005 270);
+  --ring: oklch(0.71 0.16 285);
+}
+
+.dark {
+  --background: oklch(0.14 0.01 270);
+  --foreground: oklch(0.98 0.003 90);
+  --surface: oklch(0.18 0.012 270);
+  --surface-muted: oklch(0.22 0.012 270);
+  --ink: oklch(0.98 0.003 90);
+  --ink-muted: oklch(0.7 0.02 270);
+  --card: oklch(0.18 0.012 270);
+  --card-foreground: oklch(0.98 0.003 90);
+  --popover: oklch(0.18 0.012 270);
+  --popover-foreground: oklch(0.98 0.003 90);
+  --primary: oklch(0.98 0.003 90);
+  --primary-foreground: oklch(0.18 0.012 270);
+  --secondary: oklch(0.25 0.015 270);
+  --secondary-foreground: oklch(0.98 0.003 90);
+  --muted: oklch(0.25 0.015 270);
+  --muted-foreground: oklch(0.7 0.02 270);
+  --accent: oklch(0.71 0.16 285);
+  --accent-foreground: oklch(0.99 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --destructive-foreground: oklch(0.99 0 0);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.71 0.16 285);
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv01";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: color-mix(in oklab, var(--color-accent) 25%, transparent);
+  }
+}
