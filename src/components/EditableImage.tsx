@@ -109,15 +109,18 @@ export function EditableImage({ imageKey, src, alt, ...rest }: Props) {
         >
           <button
             type="button"
-            onClick={() => {
+            onMouseDown={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
               setMenu(null);
-              fileRef.current?.click();
+              setTimeout(() => fileRef.current?.click(), 0);
             }}
             className="w-full text-left px-3 py-2 text-sm hover:bg-surface flex items-center gap-2"
           >
             <Upload size={14} className="text-accent" />
             Sostituisci immagine
           </button>
+
         </div>
       )}
     </>

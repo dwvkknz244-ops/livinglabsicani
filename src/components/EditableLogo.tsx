@@ -68,6 +68,7 @@ export function EditableLogo({ imageKey, children, className }: Props) {
   function onContext(e: React.MouseEvent) {
     if (!isAdmin) return;
     e.preventDefault();
+    e.stopPropagation();
     setMenu({ x: e.clientX, y: e.clientY });
   }
 
@@ -85,33 +86,17 @@ export function EditableLogo({ imageKey, children, className }: Props) {
 
   return (
     <>
-      <span className="relative inline-flex items-center">
-        <span
-          onContextMenu={onContext}
-          data-editable-key={imageKey}
-          style={uploading ? { opacity: 0.5 } : undefined}
-          className={className}
-        >
-          {effectiveSrc ? (
-            <img src={effectiveSrc} alt="Logo" className="h-8 w-auto object-contain" />
-          ) : (
-            children
-          )}
-        </span>
-        {isAdmin && (
-          <button
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              fileRef.current?.click();
-            }}
-            title="Sostituisci logo"
-            className="ml-2 inline-flex items-center gap-1 rounded-md bg-accent/10 text-accent px-2 py-1 text-[10px] font-medium ring-1 ring-accent/30 hover:bg-accent/20"
-          >
-            <Upload size={11} />
-            Logo
-          </button>
+      <span
+        onContextMenu={onContext}
+        data-editable-key={imageKey}
+        style={uploading ? { opacity: 0.5 } : undefined}
+        className={className}
+        title={isAdmin ? "Click destro per sostituire il logo" : undefined}
+      >
+        {effectiveSrc ? (
+          <img src={effectiveSrc} alt="Logo" className="h-8 w-auto object-contain" />
+        ) : (
+          children
         )}
       </span>
       <input
@@ -129,9 +114,11 @@ export function EditableLogo({ imageKey, children, className }: Props) {
         >
           <button
             type="button"
-            onClick={() => {
+            onMouseDown={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
               setMenu(null);
-              fileRef.current?.click();
+              setTimeout(() => fileRef.current?.click(), 0);
             }}
             className="w-full text-left px-3 py-2 text-sm hover:bg-surface flex items-center gap-2"
           >
@@ -143,4 +130,3 @@ export function EditableLogo({ imageKey, children, className }: Props) {
     </>
   );
 }
-
