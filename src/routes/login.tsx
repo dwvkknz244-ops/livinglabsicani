@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -10,7 +10,6 @@ export const Route = createFileRoute("/login")({
 });
 
 function LoginPage() {
-  const nav = useNavigate();
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -22,10 +21,10 @@ function LoginPage() {
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
-      nav({ to: "/admin" });
+      // Hard redirect: garantisce che la sessione sia hydratata quando /admin carica
+      window.location.href = "/admin";
     } catch (err: any) {
       toast.error(err.message ?? "Errore di autenticazione");
-    } finally {
       setLoading(false);
     }
   }
