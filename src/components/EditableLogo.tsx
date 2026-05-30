@@ -72,6 +72,14 @@ export function EditableLogo({ imageKey, children, className }: Props) {
     setMenu({ x: e.clientX, y: e.clientY });
   }
 
+  function onClick(e: React.MouseEvent) {
+    if (!isAdmin) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    setMenu({ x: rect.left, y: rect.bottom + 6 });
+  }
+
   function onFile(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0];
     e.target.value = "";
@@ -88,10 +96,11 @@ export function EditableLogo({ imageKey, children, className }: Props) {
     <>
       <span
         onContextMenu={onContext}
+        onClick={onClick}
         data-editable-key={imageKey}
-        style={uploading ? { opacity: 0.5 } : undefined}
+        style={{ ...(uploading ? { opacity: 0.5 } : {}), cursor: isAdmin ? "pointer" : undefined }}
         className={className}
-        title={isAdmin ? "Click destro per sostituire il logo" : undefined}
+        title={isAdmin ? "Clicca per sostituire il logo" : undefined}
       >
         {effectiveSrc ? (
           <img src={effectiveSrc} alt="Logo" className="h-8 w-auto object-contain" />
