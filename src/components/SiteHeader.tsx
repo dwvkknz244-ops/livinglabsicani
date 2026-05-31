@@ -1,4 +1,4 @@
-import { Link, useRouter } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -14,7 +14,6 @@ const navItems = [
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [isAuthed, setIsAuthed] = useState(false);
-  const router = useRouter();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setIsAuthed(!!data.session));
