@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
@@ -31,6 +32,7 @@ export function EditableImage({ imageKey, src, alt, ...rest }: Props) {
 
   const effectiveSrc = overridesQ.data?.[imageKey] ?? src;
   const isAdmin = isAdminQ.data?.isAdmin === true;
+  const portalTarget = typeof document === "undefined" ? null : document.body;
 
 
   useEffect(() => {
@@ -94,35 +96,42 @@ export function EditableImage({ imageKey, src, alt, ...rest }: Props) {
         data-editable-key={imageKey}
         style={uploading ? { opacity: 0.5, ...rest.style } : rest.style}
       />
-      <input
-        ref={fileRef}
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={onFile}
-      />
-      {menu && (
-        <div
-          style={{ position: "fixed", top: menu.y, left: menu.x, zIndex: 9999 }}
-          onClick={(e) => e.stopPropagation()}
-          className="bg-background ring-1 ring-foreground/10 shadow-xl rounded-xl py-1.5 min-w-[180px]"
-        >
-          <button
-            type="button"
-            onMouseDown={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setMenu(null);
-              setTimeout(() => fileRef.current?.click(), 0);
-            }}
-            className="w-full text-left px-3 py-2 text-sm hover:bg-surface flex items-center gap-2"
-          >
-            <Upload size={14} className="text-accent" />
-            Sostituisci immagine
-          </button>
+      {portalTarget &&
+        createPortal(
+          <>
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onClick={(e) => e.stopPropagation()}
+              onChange={onFile}
+            />
+            {menu && (
+              <div
+                style={{ position: "fixed", top: menu.y, left: menu.x, zIndex: 9999 }}
+                onClick={(e) => e.stopPropagation()}
+                className="bg-background ring-1 ring-foreground/10 shadow-xl rounded-xl py-1.5 min-w-[180px]"
+              >
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    fileRef.current?.click();
+                    setMenu(null);
+                  }}
+                  className="w-full text-left px-3 py-2 text-sm hover:bg-surface flex items-center gap-2"
+                >
+                  <Upload size={14} className="text-accent" />
+                  Sostituisci immagine
+                </button>
 
-        </div>
-      )}
+              </div>
+            )}
+          </>,
+          portalTarget,
+        )}
     </>
   );
 }
