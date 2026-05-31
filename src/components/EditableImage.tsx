@@ -6,7 +6,6 @@ import { toast } from "sonner";
 import { Upload } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { imageOverridesQueryOptions } from "@/lib/images.queries";
-import { isAdminQueryOptions } from "@/lib/news.queries";
 import { setImageOverride } from "@/lib/images.functions";
 
 type Props = React.ImgHTMLAttributes<HTMLImageElement> & {
@@ -24,14 +23,13 @@ export function EditableImage({ imageKey, src, alt, ...rest }: Props) {
     const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => setHasSession(!!s));
     return () => sub.subscription.unsubscribe();
   }, []);
-  const isAdminQ = useQuery({ ...isAdminQueryOptions, enabled: hasSession, retry: false });
   const setFn = useServerFn(setImageOverride);
   const fileRef = useRef<HTMLInputElement>(null);
   const [menu, setMenu] = useState<{ x: number; y: number } | null>(null);
   const [uploading, setUploading] = useState(false);
 
   const effectiveSrc = overridesQ.data?.[imageKey] ?? src;
-  const isAdmin = isAdminQ.data?.isAdmin === true;
+  const isAdmin = hasSession;
   const portalTarget = typeof document === "undefined" ? null : document.body;
 
 
