@@ -101,7 +101,7 @@ export function EditableImage({ imageKey, src, alt, ...rest }: Props) {
               ref={fileRef}
               type="file"
               accept="image/*"
-              className="hidden"
+              style={{ position: "fixed", width: 1, height: 1, opacity: 0, pointerEvents: "none" }}
               onClick={(e) => e.stopPropagation()}
               onChange={onFile}
             />
