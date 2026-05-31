@@ -1,11 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Upload } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { imageOverridesQueryOptions } from "@/lib/images.queries";
-import { isAdminQueryOptions } from "@/lib/news.queries";
 import { setImageOverride } from "@/lib/images.functions";
 
 type Props = {
@@ -23,14 +23,14 @@ export function EditableLogo({ imageKey, children, className }: Props) {
     const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => setHasSession(!!s));
     return () => sub.subscription.unsubscribe();
   }, []);
-  const isAdminQ = useQuery({ ...isAdminQueryOptions, enabled: hasSession, retry: false });
   const setFn = useServerFn(setImageOverride);
   const fileRef = useRef<HTMLInputElement>(null);
   const [menu, setMenu] = useState<{ x: number; y: number } | null>(null);
   const [uploading, setUploading] = useState(false);
 
   const effectiveSrc = overridesQ.data?.[imageKey];
-  const isAdmin = isAdminQ.data?.isAdmin === true;
+  const isAdmin = hasSession;
+  const portalTarget = typeof document === "undefined" ? null : document.body;
 
   useEffect(() => {
     if (!menu) return;
@@ -72,14 +72,6 @@ export function EditableLogo({ imageKey, children, className }: Props) {
     setMenu({ x: e.clientX, y: e.clientY });
   }
 
-  function onClick(e: React.MouseEvent) {
-    if (!isAdmin) return;
-    e.preventDefault();
-    e.stopPropagation();
-    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-    setMenu({ x: rect.left, y: rect.bottom + 6 });
-  }
-
   function onFile(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0];
     e.target.value = "";
@@ -96,11 +88,10 @@ export function EditableLogo({ imageKey, children, className }: Props) {
     <>
       <span
         onContextMenu={onContext}
-        onClick={onClick}
         data-editable-key={imageKey}
-        style={{ ...(uploading ? { opacity: 0.5 } : {}), cursor: isAdmin ? "pointer" : undefined }}
+        style={{ ...(uploading ? { opacity: 0.5 } : {}), cursor: isAdmin ? "context-menu" : undefined }}
         className={className}
-        title={isAdmin ? "Clicca per sostituire il logo" : undefined}
+        title={isAdmin ? "Click destro per sostituire il logo" : undefined}
       >
         {effectiveSrc ? (
           <img src={effectiveSrc} alt="Logo" className="h-8 w-auto object-contain" />
@@ -108,34 +99,41 @@ export function EditableLogo({ imageKey, children, className }: Props) {
           children
         )}
       </span>
-      <input
-        ref={fileRef}
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={onFile}
-      />
-      {menu && (
-        <div
-          style={{ position: "fixed", top: menu.y, left: menu.x, zIndex: 9999 }}
-          onClick={(e) => e.stopPropagation()}
-          className="bg-background ring-1 ring-foreground/10 shadow-xl rounded-xl py-1.5 min-w-[180px]"
-        >
-          <button
-            type="button"
-            onMouseDown={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setMenu(null);
-              setTimeout(() => fileRef.current?.click(), 0);
-            }}
-            className="w-full text-left px-3 py-2 text-sm hover:bg-surface flex items-center gap-2"
-          >
-            <Upload size={14} className="text-accent" />
-            Sostituisci logo
-          </button>
-        </div>
-      )}
+      {portalTarget &&
+        createPortal(
+          <>
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/*"
+              style={{ position: "fixed", width: 1, height: 1, opacity: 0, pointerEvents: "none" }}
+              onClick={(e) => e.stopPropagation()}
+              onChange={onFile}
+            />
+            {menu && (
+              <div
+                style={{ position: "fixed", top: menu.y, left: menu.x, zIndex: 9999 }}
+                onClick={(e) => e.stopPropagation()}
+                className="bg-background ring-1 ring-foreground/10 shadow-xl rounded-xl py-1.5 min-w-[180px]"
+              >
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    fileRef.current?.click();
+                    setMenu(null);
+                  }}
+                  className="w-full text-left px-3 py-2 text-sm hover:bg-surface flex items-center gap-2"
+                >
+                  <Upload size={14} className="text-accent" />
+                  Sostituisci logo
+                </button>
+              </div>
+            )}
+          </>,
+          portalTarget,
+        )}
     </>
   );
 }

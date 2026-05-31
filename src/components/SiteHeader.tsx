@@ -1,4 +1,4 @@
-import { Link, useRouter } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -14,7 +14,6 @@ const navItems = [
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [isAuthed, setIsAuthed] = useState(false);
-  const router = useRouter();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setIsAuthed(!!data.session));
@@ -25,7 +24,7 @@ export function SiteHeader() {
   return (
     <header className="sticky top-4 z-50 mx-auto max-w-7xl px-4 md:px-6">
       <div className="bg-background/80 backdrop-blur-xl ring-1 ring-foreground/10 rounded-2xl px-5 h-16 flex items-center justify-between">
-        <Link to="/">
+        <Link to="/" onContextMenu={isAuthed ? (e) => e.preventDefault() : undefined}>
           <EditableLogo imageKey="site-logo" className="flex items-baseline gap-1.5">
             <span className="font-semibold tracking-tight text-base">LivingLab</span>
             <span className="text-accent font-medium text-[11px] uppercase tracking-[0.2em]">Sicani</span>

@@ -1,4 +1,4 @@
-import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState, useEffect } from "react";
@@ -13,10 +13,6 @@ import { BlocksEditor } from "@/components/BlocksEditor";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({ meta: [{ title: "Admin — LivingLab Sicani" }] }),
-  beforeLoad: async () => {
-    const { data } = await supabase.auth.getUser();
-    if (!data.user) throw redirect({ to: "/login" });
-  },
   component: AdminPage,
 });
 
@@ -53,6 +49,11 @@ function AdminPage() {
       sub.subscription.unsubscribe();
     };
   }, []);
+
+  useEffect(() => {
+    if (authResolved && !hasSession) nav({ to: "/login", replace: true });
+  }, [authResolved, hasSession, nav]);
+
   const isAdminQ = useQuery({ ...isAdminQueryOptions, enabled: hasSession, retry: false });
   const newsQ = useQuery({ ...adminNewsQueryOptions, enabled: isAdminQ.data?.isAdmin === true, retry: false });
   const upsertFn = useServerFn(upsertNews);
@@ -83,7 +84,7 @@ function AdminPage() {
     nav({ to: "/login" });
   }
 
-  if (!authResolved || (hasSession && isAdminQ.isPending)) {
+  if (!authResolved || !hasSession || (hasSession && isAdminQ.isPending)) {
     return (
       <div className="min-h-screen bg-background">
         <SiteHeader />
