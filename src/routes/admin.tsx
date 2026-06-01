@@ -1,11 +1,14 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Trash2, Plus, LogOut } from "lucide-react";
+import {
+  Trash2, Plus, LogOut, Upload, Bold, Italic, Heading1, Heading2, Heading3,
+  List, ListOrdered, Link as LinkIcon, Image as ImageIcon, Quote, Code, Eye,
+} from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { adminNewsQueryOptions, isAdminQueryOptions } from "@/lib/news.queries";
 import { upsertNews, deleteNews } from "@/lib/news.functions";
