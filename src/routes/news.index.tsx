@@ -5,7 +5,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { NewsCard } from "@/components/NewsCard";
 import { allNewsQueryOptions } from "@/lib/news.queries";
 
-export const Route = createFileRoute("/news")({
+export const Route = createFileRoute("/news/")({
   head: () => ({
     meta: [
       { title: "News — LivingLab Sicani" },
