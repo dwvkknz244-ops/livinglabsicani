@@ -24,12 +24,19 @@ export function SiteHeader() {
   return (
     <header className="sticky top-4 z-50 mx-auto max-w-7xl px-4 md:px-6">
       <div className="bg-background/80 backdrop-blur-xl ring-1 ring-foreground/10 rounded-2xl px-5 h-16 flex items-center justify-between">
-        <Link to="/" onContextMenu={isAuthed ? (e) => e.preventDefault() : undefined}>
+        {isAuthed ? (
           <EditableLogo imageKey="site-logo" className="flex items-baseline gap-1.5">
             <span className="font-semibold tracking-tight text-base">LivingLab</span>
             <span className="text-accent font-medium text-[11px] uppercase tracking-[0.2em]">Sicani</span>
           </EditableLogo>
-        </Link>
+        ) : (
+          <Link to="/">
+            <EditableLogo imageKey="site-logo" className="flex items-baseline gap-1.5">
+              <span className="font-semibold tracking-tight text-base">LivingLab</span>
+              <span className="text-accent font-medium text-[11px] uppercase tracking-[0.2em]">Sicani</span>
+            </EditableLogo>
+          </Link>
+        )}
 
         <nav className="hidden md:flex items-center gap-7">
           {navItems.map((item) => (
