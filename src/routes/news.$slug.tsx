@@ -2,6 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import ReactMarkdown from "react-markdown";
 import { ArrowLeft } from "lucide-react";
+import { motion } from "framer-motion";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { EditableImage } from "@/components/EditableImage";
@@ -47,39 +48,119 @@ export const Route = createFileRoute("/news/$slug")({
   ),
 });
 
+const fadeUp = {
+  initial: { opacity: 0, y: 16 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] as const },
+};
+
 function NewsDetailPage() {
   const { slug } = Route.useParams();
   const { data: news } = useSuspenseQuery(newsBySlugQueryOptions(slug));
   if (!news) return null;
 
+  const formattedDate = news.published_at
+    ? new Date(news.published_at).toLocaleDateString("it-IT", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })
+    : "";
+
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
-      <main className="max-w-3xl mx-auto px-6 pt-16 pb-12">
-        <Link to="/news" className="inline-flex items-center gap-2 text-sm text-ink-muted hover:text-accent transition-colors mb-10">
-          <ArrowLeft size={16} /> Tutte le notizie
-        </Link>
-        <div className="flex items-center gap-3 mb-5">
-          <span className="text-[10px] font-semibold uppercase tracking-widest text-accent bg-accent/10 px-2 py-0.5 rounded">{news.category}</span>
-          <span className="text-[11px] text-ink-muted">
-            {news.published_at && new Date(news.published_at).toLocaleDateString("it-IT", { day: "2-digit", month: "long", year: "numeric" })}
-          </span>
-        </div>
-        <h1 className="text-4xl md:text-5xl font-semibold tracking-tight leading-[1.1] text-balance mb-8">{news.title}</h1>
-        <p className="text-lg text-ink-muted leading-relaxed mb-10">{news.excerpt}</p>
-        {news.cover_url && (
-          <div className="rounded-3xl overflow-hidden mb-12 ring-1 ring-foreground/5">
-            <EditableImage
-              imageKey={`news-cover:${news.slug}`}
-              src={news.cover_url}
-              alt={news.title}
-              className="w-full"
-            />
+      <main className="max-w-4xl mx-auto px-6 pt-16 pb-24">
+        {/* Back link */}
+        <nav className="mb-12">
+          <Link
+            to="/news"
+            className="group inline-flex items-center gap-2 text-sm font-medium text-ink-muted hover:text-accent transition-colors"
+          >
+            <ArrowLeft size={16} className="transition-transform group-hover:-translate-x-1" />
+            Tutte le notizie
+          </Link>
+        </nav>
+
+        {/* Header */}
+        <motion.header {...fadeUp} className="mb-14">
+          <div className="flex items-center gap-3 mb-7">
+            <span className="px-2.5 py-1 rounded-full bg-accent/10 text-accent text-[11px] font-semibold tracking-wider uppercase">
+              {news.category}
+            </span>
+            {formattedDate && (
+              <time className="text-sm text-ink-muted">{formattedDate}</time>
+            )}
           </div>
+
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold leading-[1.05] tracking-tight text-balance mb-8 text-foreground">
+            {news.title}
+          </h1>
+
+          <p className="text-xl md:text-2xl text-ink-muted leading-relaxed max-w-2xl font-normal">
+            {news.excerpt}
+          </p>
+        </motion.header>
+
+        {/* Cover */}
+        {news.cover_url && (
+          <motion.figure
+            {...fadeUp}
+            transition={{ ...fadeUp.transition, delay: 0.1 }}
+            className="mb-16 md:-mx-12 lg:-mx-20"
+          >
+            <div className="aspect-video rounded-3xl overflow-hidden bg-surface-muted ring-1 ring-foreground/5 shadow-xl shadow-accent/10">
+              <EditableImage
+                imageKey={`news-cover:${news.slug}`}
+                src={news.cover_url}
+                alt={news.title}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </motion.figure>
         )}
-        <article className="prose prose-neutral max-w-none text-foreground prose-headings:font-semibold prose-headings:tracking-tight prose-a:text-accent">
-          <ReactMarkdown>{news.body}</ReactMarkdown>
-        </article>
+
+        {/* Body */}
+        <motion.div
+          {...fadeUp}
+          transition={{ ...fadeUp.transition, delay: 0.15 }}
+          className="max-w-[68ch] mx-auto"
+        >
+          <article
+            className="
+              prose prose-neutral prose-lg max-w-none
+              prose-p:text-foreground/85 prose-p:leading-[1.8] prose-p:mb-7
+              prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-foreground
+              prose-h2:text-3xl prose-h2:mt-14 prose-h2:mb-5
+              prose-h3:text-2xl prose-h3:mt-10 prose-h3:mb-4
+              prose-strong:text-foreground prose-strong:font-semibold
+              prose-a:text-accent prose-a:no-underline hover:prose-a:underline
+              prose-blockquote:not-italic prose-blockquote:border-l-4 prose-blockquote:border-accent
+              prose-blockquote:bg-surface prose-blockquote:rounded-r-2xl prose-blockquote:px-8 prose-blockquote:py-6
+              prose-blockquote:my-10 prose-blockquote:text-foreground prose-blockquote:font-medium
+              prose-blockquote:text-xl prose-blockquote:leading-snug
+              prose-img:rounded-2xl prose-img:ring-1 prose-img:ring-foreground/5
+              prose-ul:my-6 prose-ol:my-6 prose-li:my-2 prose-li:text-foreground/85
+              prose-code:bg-surface prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-code:before:content-none prose-code:after:content-none
+            "
+          >
+            <ReactMarkdown>{news.body}</ReactMarkdown>
+          </article>
+
+          {/* Footer */}
+          <footer className="mt-20 pt-8 border-t border-border">
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="text-xs text-ink-muted uppercase tracking-widest">Categoria</span>
+              <span className="text-sm font-medium text-foreground hover:text-accent transition-colors">
+                {news.category}
+              </span>
+              <span className="text-ink-muted/40">•</span>
+              <Link to="/news" className="text-sm font-medium text-ink-muted hover:text-accent transition-colors">
+                Torna all'archivio
+              </Link>
+            </div>
+          </footer>
+        </motion.div>
       </main>
       <SiteFooter />
     </div>
