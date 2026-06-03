@@ -27,10 +27,10 @@ export const Route = createFileRoute("/")({
 });
 
 const BACKGROUND_VIDEOS = [
-  "https://cdn.coverr.co/videos/coverr-fields-trees-and-mountains-637/1080p.mp4", // Montagne e campi
-  "https://cdn.coverr.co/videos/coverr-boat-on-the-lake-2387/1080p.mp4",          // Laghi (barca sul lago)
-  "https://cdn.coverr.co/videos/coverr-hiking-through-the-mountains-1755/1080p.mp4", // Trekking in montagna
-  "https://cdn.coverr.co/videos/coverr-grass-blowing-in-the-wind-698/1080p.mp4"      // Campi di erba al vento
+  "https://cdn.coverr.co/videos/coverr-grapevine-in-italy-5448/1080p.mp4",      // Vigneti in Italia (Campagna e Agricoltura)
+  "https://cdn.coverr.co/videos/coverr-lago-di-braies-4640/1080p.mp4",          // Lago di Braies (Lago e Montagna)
+  "https://cdn.coverr.co/videos/coverr-amalfi-coast-9252/1080p.mp4",            // Costiera Amalfitana (Mare e Scogliere)
+  "https://cdn.coverr.co/videos/coverr-fiordo-di-furore-3363/1080p.mp4"          // Fiordo di Furore (Natura e Rocce)
 ];
 
 function HomePage() {
