@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { ArrowRight, Sprout, Cpu, ShieldCheck } from "lucide-react";
@@ -25,7 +26,15 @@ export const Route = createFileRoute("/")({
   component: HomePage,
 });
 
+const BACKGROUND_VIDEOS = [
+  "https://cdn.coverr.co/videos/coverr-fields-trees-and-mountains-637/1080p.mp4", // Montagne e campi
+  "https://cdn.coverr.co/videos/coverr-boat-on-the-lake-2387/1080p.mp4",          // Laghi (barca sul lago)
+  "https://cdn.coverr.co/videos/coverr-hiking-through-the-mountains-1755/1080p.mp4", // Trekking in montagna
+  "https://cdn.coverr.co/videos/coverr-grass-blowing-in-the-wind-698/1080p.mp4"      // Campi di erba al vento
+];
+
 function HomePage() {
+  const [videoIndex, setVideoIndex] = useState(0);
   const { data: news } = useSuspenseQuery(latestNewsQueryOptions);
   const featured = news[0];
   const rest = news.slice(1, 4);
@@ -38,13 +47,14 @@ function HomePage() {
         {/* Video intro section */}
         <section className="relative h-screen w-full overflow-hidden bg-background -mt-20">
           <video
+            key={videoIndex}
             autoPlay
             muted
-            loop
             playsInline
             aria-hidden="true"
             className="absolute inset-0 w-full h-full object-cover"
-            src="https://cdn.coverr.co/videos/coverr-fields-trees-and-mountains-637/1080p.mp4"
+            src={BACKGROUND_VIDEOS[videoIndex]}
+            onEnded={() => setVideoIndex((prev) => (prev + 1) % BACKGROUND_VIDEOS.length)}
             poster="https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=1920&q=80"
           />
           <div className="absolute inset-0 bg-white/10 backdrop-blur-[1px]" aria-hidden="true" />
