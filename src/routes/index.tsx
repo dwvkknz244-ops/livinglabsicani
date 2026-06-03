@@ -8,7 +8,7 @@ import { NewsCard } from "@/components/NewsCard";
 import { EditableImage } from "@/components/EditableImage";
 import { latestNewsQueryOptions } from "@/lib/news.queries";
 import heroSicani from "@/assets/hero-sicani.jpg";
-import logoMark from "@/assets/logo-mark.png.asset.json";
+
 
 
 
@@ -50,7 +50,7 @@ function HomePage() {
           <div className="absolute inset-0 bg-foreground/30" aria-hidden="true" />
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <img
-              src={logoMark.url}
+              src="/logo-mark.png"
               alt="LivingLab Sicani"
               className="w-[260px] md:w-[360px] lg:w-[420px] h-auto drop-shadow-2xl"
             />
