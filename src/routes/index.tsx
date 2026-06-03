@@ -44,7 +44,7 @@ function HomePage() {
             playsInline
             aria-hidden="true"
             className="absolute inset-0 w-full h-full object-cover"
-            src="https://cdn.coverr.co/videos/coverr-clouds-and-sunny-hills-8724/1080p.mp4"
+            src="https://cdn.coverr.co/videos/coverr-fields-trees-and-mountains-637/1080p.mp4"
             poster="https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=1920&q=80"
           />
           <div className="absolute inset-0 bg-white/10 backdrop-blur-[1px]" aria-hidden="true" />
