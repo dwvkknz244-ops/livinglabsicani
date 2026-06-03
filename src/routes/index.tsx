@@ -36,7 +36,7 @@ function HomePage() {
 
       <main>
         {/* Video intro section */}
-        <section className="relative min-h-screen overflow-hidden bg-foreground">
+        <section className="relative h-screen w-full overflow-hidden bg-foreground -mt-20">
           <video
             autoPlay
             muted
