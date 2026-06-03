@@ -36,7 +36,7 @@ function HomePage() {
 
       <main>
         {/* Video intro section */}
-        <section className="relative h-screen w-full overflow-hidden bg-foreground -mt-20">
+        <section className="relative h-screen w-full overflow-hidden bg-background -mt-20">
           <video
             autoPlay
             muted
@@ -44,10 +44,10 @@ function HomePage() {
             playsInline
             aria-hidden="true"
             className="absolute inset-0 w-full h-full object-cover"
-            src="https://cdn.coverr.co/videos/coverr-a-farmer-walking-through-his-field-9292/1080p.mp4"
-            poster="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=60"
+            src="https://cdn.coverr.co/videos/coverr-clouds-and-sunny-hills-8724/1080p.mp4"
+            poster="https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=1920&q=80"
           />
-          <div className="absolute inset-0 bg-foreground/30" aria-hidden="true" />
+          <div className="absolute inset-0 bg-white/10 backdrop-blur-[1px]" aria-hidden="true" />
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <img
               src="/logo-mark.png"
