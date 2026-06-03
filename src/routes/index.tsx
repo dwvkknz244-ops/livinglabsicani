@@ -8,6 +8,9 @@ import { NewsCard } from "@/components/NewsCard";
 import { EditableImage } from "@/components/EditableImage";
 import { latestNewsQueryOptions } from "@/lib/news.queries";
 import heroSicani from "@/assets/hero-sicani.jpg";
+import logoMark from "@/assets/logo-mark.png.asset.json";
+
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
