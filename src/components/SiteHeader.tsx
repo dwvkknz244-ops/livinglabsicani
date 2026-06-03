@@ -7,6 +7,7 @@ import { EditableLogo } from "./EditableLogo";
 const navItems = [
   { to: "/chi-siamo", label: "Chi siamo" },
   { to: "/servizi", label: "Servizi" },
+  { to: "/territorio", label: "Territorio" },
   { to: "/news", label: "News" },
   { to: "/partecipa", label: "Partecipa" },
 ];
