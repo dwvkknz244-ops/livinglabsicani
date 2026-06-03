@@ -35,8 +35,31 @@ function HomePage() {
       <SiteHeader />
 
       <main>
+        {/* Video intro section */}
+        <section className="relative min-h-screen overflow-hidden bg-foreground">
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            aria-hidden="true"
+            className="absolute inset-0 w-full h-full object-cover"
+            src="https://cdn.coverr.co/videos/coverr-a-farmer-walking-through-his-field-9292/1080p.mp4"
+            poster="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=60"
+          />
+          <div className="absolute inset-0 bg-foreground/30" aria-hidden="true" />
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <img
+              src={logoMark.url}
+              alt="LivingLab Sicani"
+              className="w-[260px] md:w-[360px] lg:w-[420px] h-auto drop-shadow-2xl"
+            />
+          </div>
+        </section>
+
         {/* Hero */}
         <section className="pt-16 pb-24 px-6 relative overflow-hidden">
+
           <div className="max-w-7xl mx-auto grid grid-cols-12 gap-12 items-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
