@@ -1,27 +1,45 @@
-## Obiettivo
-Aggiungere una nuova sezione **sopra l'hero** della home (`/`), della stessa dimensione visiva, contenente:
-- un **video di sfondo** placeholder (qualsiasi mp4 dimostrativo, sostituibile in seguito)
-- il **logo allegato** centrato sopra il video, come elemento separato e sovrapposto
+## Cosa cambia
 
-## Cosa fare
-1. **Caricare il logo allegato come asset CDN** tramite `lovable-assets`:
-   - `lovable-assets create --file /mnt/user-uploads/Asset_21.png --filename logo-mark.png > src/assets/logo-mark.png.asset.json`
-2. **Modificare `src/routes/index.tsx`**:
-   - Inserire una nuova `<section>` come primo figlio di `<main>`, **prima** della sezione hero esistente.
-   - Contenitore `relative overflow-hidden` con altezza `min-h-screen` (stessa scala visiva della hero).
-   - `<video autoPlay muted loop playsInline>` posizionato `absolute inset-0 w-full h-full object-cover` con `src` placeholder (es. un sample mp4 pubblico come `https://cdn.coverr.co/videos/coverr-...` o `https://www.w3schools.com/html/mov_bbb.mp4` — file demo sostituibile).
-   - Un overlay scuro leggero (`absolute inset-0 bg-foreground/20`) per dare contrasto al logo.
-   - Il **logo importato** dal pointer JSON, renderizzato con `<img>` centrato via wrapper `absolute inset-0 flex items-center justify-center`, dimensione contenuta (es. `w-[280px] md:w-[360px]`), `pointer-events-none`.
-   - I due elementi (video e logo) restano **separati nel markup**, non annidati.
-3. **Nessuna modifica** a header, footer, hero esistente, design tokens o backend.
+Solo l'aspetto del riquadro che contiene la mappa, la legenda, le liste dei comuni e la riga di statistiche — su `src/routes/territorio.tsx`. **La mappa SVG, l'outline della Sicilia, il bordo tratteggiato della Città Metropolitana di Palermo e tutte le posizioni dei punti restano identiche.**
 
-## Dettagli tecnici
-- Import: `import logoMark from "@/assets/logo-mark.png.asset.json";` e uso di `logoMark.url` nell'`<img>`.
-- Video placeholder: URL di un file mp4 demo pubblico; l'utente lo sostituirà fornendo il proprio file (che poi caricheremo come asset CDN).
-- Altezza sezione: `min-h-screen` per impatto pari alla hero; padding zero (il video riempie tutto).
-- Accessibilità: `alt` descrittivo sul logo, `aria-hidden` sul video decorativo.
+Direzione scelta (Griglia architetturale + chip): conserva la palette del sito (off-white caldo + viola `#8685FD`) ma rende il blocco molto più curato e moderno.
 
-## Fuori scopo
-- Caricamento del video finale (lo fornirà l'utente in seguito).
-- Editor admin per video/logo di questa sezione.
-- Animazioni o controlli video personalizzati.
+## Modifiche puntuali
+
+1. **Cornice della mappa**
+   - Aggiungere un sottile alone viola morbido dietro la card della mappa (gradient soft `blur` + `opacity`).
+   - Aumentare il raggio dei bordi (`rounded-[2rem]`) e l'ombra (`shadow-2xl`).
+   - Mantenere il fondo scuro attuale `#2b3445` (o spostarlo a `#1A1A1E` per maggiore contrasto col viola).
+   - Pulsante "Mostra intera Sicilia": stile glass più raffinato (`bg-white/10 backdrop-blur-md border border-white/20`).
+
+2. **Pannello Legenda**
+   - Card bianca con bordo sottile `border-foreground/8`, raggio `rounded-3xl`, padding più generoso.
+   - Pallini con anello (`ring-4 ring-accent/20`) per dare profondità.
+   - Etichetta "LEGENDA" in tracking ampio.
+
+3. **Comuni → chip pill (cambiamento più visibile)**
+   - Sostituire le due liste verticali con due gruppi di **chip pill** (`px-3 py-1.5 rounded-full border`).
+   - Provincia Agrigento: chip neutri, hover viola; Bivona è il chip pieno viola con badge "CAPOFILA".
+   - Provincia Palermo: chip neutri con accento viola-light.
+   - Mantiene il click/hover esistente che apre il drawer del comune.
+
+4. **Riga statistiche**
+   - Card più ariose (`rounded-[2rem]`, padding maggiore).
+   - Numero principale in font monospace (es. JetBrains Mono via Google Fonts) per stacco "dato".
+   - Lieve hover-lift `hover:-translate-y-1`.
+
+5. **Header sezione**
+   - Aumentare leggermente il titolo (`text-6xl md:text-7xl`) e la spaziatura sopra la griglia.
+
+## Cosa NON cambia
+
+- Il file SVG della Sicilia (`SICILY_PATH`, viewBox, proiezione).
+- Coordinate e marker dei 12 comuni, l'animazione del capofila, il bordo tratteggiato di Palermo, le etichette "AGRIGENTO" / "CITTÀ METROPOLITANA DI PALERMO".
+- Il drawer di dettaglio del comune e la sua logica.
+- Header, footer, routing, dati `COMUNI`.
+
+## Note tecniche
+
+- Tutte le modifiche in `src/routes/territorio.tsx` tra la riga ~660 (griglia mappa+sidebar) e ~770 (statistiche).
+- Aggiungere import di `JetBrains Mono` in `src/styles.css` con `@import url(...)` e token `--font-mono` sotto `@theme`, oppure usare `font-mono` di Tailwind (DejaVu/ui-monospace) senza nuovi font per restare leggeri.
+- Nessun nuovo pacchetto, nessuna modifica al backend, nessun nuovo asset.

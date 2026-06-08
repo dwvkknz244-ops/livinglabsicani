@@ -642,12 +642,12 @@ function TerritorioPage() {
 
       <main className="pt-24 pb-16">
         {/* Header */}
-        <div className="max-w-7xl mx-auto px-6 mb-10">
-          <span className="text-[11px] font-semibold uppercase tracking-widest text-accent mb-4 block">
+        <div className="max-w-7xl mx-auto px-6 mb-12">
+          <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent mb-4 block">
             Il territorio
           </span>
-          <h1 className="text-5xl md:text-6xl font-semibold tracking-tight leading-[1.05] text-balance mb-5">
-            I <span className="text-accent italic">comuni</span> dei Sicani.
+          <h1 className="text-6xl md:text-7xl font-semibold tracking-tight leading-[1.02] text-balance mb-6">
+            I <span className="text-accent italic font-normal">comuni</span> dei Sicani.
           </h1>
           <p className="text-lg text-ink-muted max-w-[52ch] leading-relaxed">
             Dodici comuni tra le province di Agrigento e Palermo, uniti da un
@@ -658,95 +658,99 @@ function TerritorioPage() {
 
         {/* Map + sidebar */}
         <div className="max-w-7xl mx-auto px-6 flex flex-col lg:flex-row gap-6">
-          {/* Map */}
-          <div
-            className="flex-1 rounded-3xl overflow-hidden ring-1 ring-foreground/8 shadow-xl bg-[#2b3445]"
-            style={{ height: "540px", position: "relative" }}
-          >
-            <SiciliaMap onSelectComune={setSelectedComune} selectedComune={selectedComune} />
+          {/* Map with viola glow halo */}
+          <div className="flex-1 relative group">
+            <div className="absolute -inset-1 bg-gradient-to-tr from-accent/30 via-accent/10 to-transparent rounded-[2.2rem] blur-2xl opacity-60 pointer-events-none" />
+            <div
+              className="relative rounded-[2rem] overflow-hidden ring-1 ring-foreground/10 shadow-2xl bg-[#1A1A1E]"
+              style={{ height: "540px" }}
+            >
+              <SiciliaMap onSelectComune={setSelectedComune} selectedComune={selectedComune} />
+            </div>
           </div>
 
           {/* Sidebar */}
-          <div className="w-full lg:w-72 flex flex-col gap-4">
+          <div className="w-full lg:w-80 flex flex-col gap-5">
             {/* Legend */}
-            <div className="bg-surface rounded-2xl p-5 ring-1 ring-foreground/5">
-              <p className="text-[11px] font-semibold uppercase tracking-widest text-ink-muted mb-4">
+            <div className="bg-surface rounded-3xl p-6 border border-foreground/8 shadow-sm">
+              <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-ink-muted/70 mb-5">
                 Legenda
               </p>
-              <div className="space-y-3">
+              <div className="space-y-3.5">
                 <div className="flex items-center gap-3">
-                  <div className="size-5 rounded-full bg-accent ring-4 ring-accent/20 flex-shrink-0" />
-                  <span className="text-sm text-foreground">Comune capofila (Bivona)</span>
+                  <div className="size-3.5 rounded-full bg-accent ring-4 ring-accent/20 flex-shrink-0" />
+                  <span className="text-sm text-foreground font-medium">Comune capofila (Bivona)</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="size-4 rounded-full bg-[#6C63FF] ring-2 ring-[#6C63FF]/20 flex-shrink-0" />
-                  <span className="text-sm text-ink-muted">Provincia di Agrigento</span>
+                  <div className="size-3 rounded-full bg-[#6C63FF] flex-shrink-0" />
+                  <span className="text-sm text-foreground/80">Provincia di Agrigento</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="size-4 rounded-full bg-[#a78bfa] ring-2 ring-[#a78bfa]/20 flex-shrink-0" />
-                  <span className="text-sm text-ink-muted">Provincia di Palermo</span>
+                  <div className="size-3 rounded-full bg-[#a78bfa] flex-shrink-0" />
+                  <span className="text-sm text-foreground/80">Provincia di Palermo</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="w-5 h-1 border-t-2 border-dashed border-[#ef4444] flex-shrink-0" />
-                  <span className="text-sm text-ink-muted">Confine Città Metr. Palermo</span>
+                  <div className="w-6 h-0 border-t-2 border-dashed border-[#ef4444] flex-shrink-0" />
+                  <span className="text-sm text-foreground/80">Confine Città Metr. Palermo</span>
                 </div>
               </div>
             </div>
 
-            {/* Agrigento list */}
-            <div className="bg-surface rounded-2xl p-5 ring-1 ring-foreground/5 flex-1">
-              <p className="text-[11px] font-semibold uppercase tracking-widest text-ink-muted mb-4">
+            {/* Agrigento chips */}
+            <div className="bg-surface rounded-3xl p-6 border border-foreground/8 shadow-sm">
+              <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-ink-muted/70 mb-4">
                 Prov. Agrigento
               </p>
-              <ul className="space-y-2.5">
-                {agComuni.map((c) => (
-                  <li key={c.nome}>
-                    <button
-                      onClick={() => setSelectedComune(c)}
-                      className="flex items-center gap-2.5 w-full text-left hover:text-accent transition-colors group cursor-pointer"
-                    >
-                      <MapPin size={13} className="text-accent flex-shrink-0 group-hover:scale-110 transition-transform" />
-                      <span className={`text-sm font-medium ${selectedComune?.nome === c.nome ? 'text-accent font-semibold' : 'text-foreground'}`}>
-                        {c.nome}
-                        {c.capofila && (
-                          <span className="ml-1.5 text-[9px] font-bold uppercase tracking-widest text-accent bg-accent/10 px-2 py-0.5 rounded-full">
-                            capofila
-                          </span>
-                        )}
-                      </span>
+              <div className="flex flex-wrap gap-2">
+                {agComuni.map((c) => {
+                  const isSelected = selectedComune?.nome === c.nome;
+                  const isCapofila = !!c.capofila;
+                  const base = "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm transition-all cursor-pointer";
+                  const cls = isCapofila
+                    ? `${base} bg-accent text-white font-semibold border border-accent shadow-sm hover:shadow-md`
+                    : isSelected
+                      ? `${base} bg-accent/10 text-accent font-semibold border border-accent/30`
+                      : `${base} bg-background text-foreground border border-foreground/10 hover:border-accent hover:text-accent`;
+                  return (
+                    <button key={c.nome} onClick={() => setSelectedComune(c)} className={cls}>
+                      {c.nome}
+                      {isCapofila && (
+                        <span className="text-[8px] font-bold uppercase tracking-widest bg-white/20 text-white rounded px-1.5 py-0.5">
+                          Capofila
+                        </span>
+                      )}
                     </button>
-                  </li>
-                ))}
-              </ul>
+                  );
+                })}
+              </div>
             </div>
 
-            {/* Palermo list */}
-            <div className="bg-surface rounded-2xl p-5 ring-1 ring-foreground/5 flex-1">
-              <p className="text-[11px] font-semibold uppercase tracking-widest text-ink-muted mb-4">
+            {/* Palermo chips */}
+            <div className="bg-surface rounded-3xl p-6 border border-foreground/8 shadow-sm">
+              <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-ink-muted/70 mb-4">
                 Prov. Palermo
               </p>
-              <ul className="space-y-2.5">
-                {paComuni.map((c) => (
-                  <li key={c.nome}>
-                    <button
-                      onClick={() => setSelectedComune(c)}
-                      className="flex items-center gap-2.5 w-full text-left hover:text-accent transition-colors group cursor-pointer"
-                    >
-                      <MapPin size={13} className="text-[#a78bfa] flex-shrink-0 group-hover:scale-110 transition-transform" />
-                      <span className={`text-sm font-medium ${selectedComune?.nome === c.nome ? 'text-[#a78bfa] font-semibold' : 'text-foreground'}`}>
-                        {c.nome}
-                      </span>
+              <div className="flex flex-wrap gap-2">
+                {paComuni.map((c) => {
+                  const isSelected = selectedComune?.nome === c.nome;
+                  const base = "inline-flex items-center px-3 py-1.5 rounded-full text-sm transition-all cursor-pointer";
+                  const cls = isSelected
+                    ? `${base} bg-[#a78bfa]/10 text-[#7c6ad9] font-semibold border border-[#a78bfa]/40`
+                    : `${base} bg-background text-foreground border border-foreground/10 hover:border-[#a78bfa] hover:text-[#7c6ad9]`;
+                  return (
+                    <button key={c.nome} onClick={() => setSelectedComune(c)} className={cls}>
+                      {c.nome}
                     </button>
-                  </li>
-                ))}
-              </ul>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
 
         {/* Stats strip */}
-        <div className="max-w-7xl mx-auto px-6 mt-10">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="max-w-7xl mx-auto px-6 mt-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
             {[
               { value: "12", label: "Comuni" },
               { value: "2", label: "Province" },
@@ -755,12 +759,12 @@ function TerritorioPage() {
             ].map((stat) => (
               <div
                 key={stat.label}
-                className="bg-surface rounded-2xl px-6 py-5 ring-1 ring-foreground/5 text-center"
+                className="bg-surface rounded-[2rem] px-7 py-7 border border-foreground/8 shadow-sm hover:-translate-y-1 hover:shadow-md transition-all"
               >
-                <div className="text-3xl font-semibold tracking-tight text-accent mb-1">
+                <div className="font-mono text-3xl md:text-4xl font-bold tracking-tight text-accent mb-2">
                   {stat.value}
                 </div>
-                <div className="text-[11px] font-semibold uppercase tracking-widest text-ink-muted">
+                <div className="text-[10px] font-bold uppercase tracking-[0.22em] text-ink-muted/70">
                   {stat.label}
                 </div>
               </div>
