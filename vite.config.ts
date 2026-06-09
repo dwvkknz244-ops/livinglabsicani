@@ -9,6 +9,6 @@ export default defineConfig({
     server: { entry: "server" },
   },
   vite: {
-    plugins: [cloudflare()],
+    plugins: [cloudflare({ viteEnvironment: { name: "ssr" } })],
   },
 });
