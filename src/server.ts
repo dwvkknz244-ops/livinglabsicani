@@ -18,8 +18,10 @@ async function getServerEntry(): Promise<ServerEntry> {
   return serverEntryPromise;
 }
 
-function brandedErrorResponse(): Response {
-  return new Response(renderErrorPage(), {
+function brandedErrorResponse(err?: any): Response {
+  const errorText = err ? (err.stack || err.message || String(err)) : "Unknown Error";
+  const html = renderErrorPage().replace("</h1>", `</h1><pre style="text-align: left; background: #eee; padding: 1rem; overflow-x: auto; font-size: 0.8rem">${errorText}</pre>`);
+  return new Response(html, {
     status: 500,
     headers: { "content-type": "text/html; charset=utf-8" },
   });
@@ -80,7 +82,7 @@ export default {
       return await normalizeCatastrophicSsrResponse(response);
     } catch (error) {
       console.error(error);
-      return brandedErrorResponse();
+      return brandedErrorResponse(error);
     }
   },
 };
