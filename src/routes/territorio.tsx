@@ -335,11 +335,11 @@ function SiciliaMap({ onSelectComune, selectedComune }: SiciliaMapProps) {
     : `0 0 ${SVG_W} ${SVG_H}`;
 
   return (
-    <div className="relative w-full h-full">
+    <div className="relative w-full h-full overflow-visible">
       {/* Zoom control button */}
       <button
         onClick={() => setIsZoomed(!isZoomed)}
-        className="absolute top-4 right-4 z-10 bg-background/85 backdrop-blur-md hover:bg-background/95 text-foreground px-3.5 py-2 rounded-xl text-[11px] font-semibold flex items-center gap-2 shadow-lg ring-1 ring-foreground/10 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+        className="absolute top-4 right-4 z-20 bg-background/85 backdrop-blur-md hover:bg-background/95 text-foreground px-3.5 py-2 rounded-xl text-[11px] font-semibold flex items-center gap-2 shadow-lg ring-1 ring-foreground/10 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
         title={isZoomed ? "Mostra l'intera Sicilia" : "Focalizza sui Monti Sicani"}
       >
         {isZoomed ? (
@@ -355,69 +355,59 @@ function SiciliaMap({ onSelectComune, selectedComune }: SiciliaMapProps) {
         )}
       </button>
 
-      <motion.svg
-        animate={{ viewBox: currentViewBox }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        xmlns="http://www.w3.org/2000/svg"
-        style={{ width: "100%", height: "100%", display: "block" }}
-        aria-label="Mappa della Sicilia con i comuni dei Sicani"
+      <motion.div
+        className="w-full h-full relative overflow-visible"
+        animate={{
+          y: [0, -10, 0],
+        }}
+        transition={{
+          duration: 6,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
       >
-        {/* ── Ocean background ── */}
-        <rect width={SVG_W} height={SVG_H} fill="#2b3445" rx="0" />
-
-        {/* ── Subtle grid lines ── */}
-        {[...Array(6)].map((_, i) => (
-          <line
-            key={`h${i}`}
-            x1={0} y1={i * (SVG_H / 5)}
-            x2={SVG_W} y2={i * (SVG_H / 5)}
-            stroke="#8685FD" strokeOpacity="0.12" strokeWidth="0.5"
-            vectorEffect="non-scaling-stroke"
+        <motion.svg
+          animate={{ viewBox: currentViewBox }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          xmlns="http://www.w3.org/2000/svg"
+          style={{ width: "100%", height: "100%", display: "block" }}
+          aria-label="Mappa della Sicilia con i comuni dei Sicani"
+        >
+          {/* ── Sicily island fill ── */}
+          {/* Shadow / depth */}
+          <path
+            d={SICILY_SUBPATH_0}
+            fill="none"
+            stroke="#8685FD"
+            strokeWidth="8"
+            strokeLinejoin="round"
+            opacity="0.08"
+            transform="translate(3, 5)"
           />
-        ))}
-        {[...Array(10)].map((_, i) => (
-          <line
-            key={`v${i}`}
-            x1={i * (SVG_W / 9)} y1={0}
-            x2={i * (SVG_W / 9)} y2={SVG_H}
-            stroke="#8685FD" strokeOpacity="0.12" strokeWidth="0.5"
-            vectorEffect="non-scaling-stroke"
+          {/* Island body */}
+          <path
+            d={SICILY_SUBPATH_0}
+            fill="#fdfcf7"
+            stroke="none"
+            className="drop-shadow-[0_24px_36px_rgba(134,133,253,0.16)] dark:drop-shadow-[0_24px_36px_rgba(134,133,253,0.35)] transition-all duration-300"
           />
-        ))}
-
-        {/* ── Sicily island fill ── */}
-        {/* Shadow / depth */}
-        <path
-          d={SICILY_SUBPATH_0}
-          fill="none"
-          stroke="#8685FD"
-          strokeWidth="8"
-          strokeLinejoin="round"
-          opacity="0.08"
-          transform="translate(3, 5)"
-        />
-        {/* Island body */}
-        <path
-          d={SICILY_SUBPATH_0}
-          fill="#fdfcf7"
-          stroke="none"
-        />
-        {/* Subtle inner terrain gradient effect */}
-        <path
-          d={SICILY_SUBPATH_0}
-          fill={`url(${urlPrefix}#terrainGrad)`}
-          opacity="0.45"
-        />
-        {/* Island outline (border) */}
-        <path
-          d={SICILY_PATH}
-          fill="#8685FD"
-        />
-        {/* Tiny island fill */}
-        <path
-          d={SICILY_SUBPATH_2}
-          fill="#f4e2ba"
-        />
+          {/* Subtle inner terrain gradient effect */}
+          <path
+            d={SICILY_SUBPATH_0}
+            fill={`url(${urlPrefix}#terrainGrad)`}
+            opacity="0.45"
+          />
+          {/* Island outline (border) */}
+          <path
+            d={SICILY_PATH}
+            fill="#8685FD"
+          />
+          {/* Tiny island fill */}
+          <path
+            d={SICILY_SUBPATH_2}
+            fill="#fdfcf7"
+            className="drop-shadow-[0_4px_8px_rgba(134,133,253,0.12)]"
+          />
 
         {/* ── Gradient definitions ── */}
         <defs>
@@ -553,31 +543,32 @@ function SiciliaMap({ onSelectComune, selectedComune }: SiciliaMapProps) {
             </g>
           );
         })}
-      </motion.svg>
+        </motion.svg>
 
-      {/* ── HTML Tooltip (outside SVG for better styling) ── */}
-      {hovered && (
-        <div
-          className="pointer-events-none absolute z-10 bg-background rounded-2xl shadow-xl ring-1 ring-accent/20 px-4 py-3 min-w-[160px]"
-          style={{
-            left: tooltipPos[0] + 16,
-            top: tooltipPos[1] - 20,
-            transform: tooltipPos[2] > 0.6 ? "translateX(calc(-100% - 32px))" : "none",
-          }}
-        >
-          <div className="text-[10px] font-bold uppercase tracking-widest text-accent mb-1">
-            Prov. {hovered.provincia}
-          </div>
-          <div className="text-sm font-semibold text-foreground leading-tight">
-            {hovered.nome}
-          </div>
-          {hovered.capofila && (
-            <div className="mt-2 inline-block text-[9px] font-bold uppercase tracking-widest text-accent bg-accent/10 rounded-full px-2 py-0.5">
-              Comune capofila
+        {/* ── HTML Tooltip (outside SVG for better styling) ── */}
+        {hovered && (
+          <div
+            className="pointer-events-none absolute z-10 bg-background rounded-2xl shadow-xl ring-1 ring-accent/20 px-4 py-3 min-w-[160px]"
+            style={{
+              left: tooltipPos[0] + 16,
+              top: tooltipPos[1] - 20,
+              transform: tooltipPos[2] > 0.6 ? "translateX(calc(-100% - 32px))" : "none",
+            }}
+          >
+            <div className="text-[10px] font-bold uppercase tracking-widest text-accent mb-1">
+              Prov. {hovered.provincia}
             </div>
-          )}
-        </div>
-      )}
+            <div className="text-sm font-semibold text-foreground leading-tight">
+              {hovered.nome}
+            </div>
+            {hovered.capofila && (
+              <div className="mt-2 inline-block text-[9px] font-bold uppercase tracking-widest text-accent bg-accent/10 rounded-full px-2 py-0.5">
+                Comune capofila
+              </div>
+            )}
+          </div>
+        )}
+      </motion.div>
     </div>
   );
 }
@@ -660,8 +651,8 @@ function TerritorioPage() {
         <div className="max-w-7xl mx-auto px-6 flex flex-col lg:flex-row gap-6">
           {/* Map */}
           <div
-            className="flex-1 rounded-3xl overflow-hidden ring-1 ring-foreground/8 shadow-xl bg-[#2b3445]"
-            style={{ height: "540px", position: "relative" }}
+            className="flex-1 relative overflow-visible"
+            style={{ height: "540px" }}
           >
             <SiciliaMap onSelectComune={setSelectedComune} selectedComune={selectedComune} />
           </div>

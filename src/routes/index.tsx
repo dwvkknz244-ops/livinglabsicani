@@ -1,5 +1,4 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { ArrowRight, Sprout, Cpu, ShieldCheck } from "lucide-react";
@@ -26,15 +25,7 @@ export const Route = createFileRoute("/")({
   component: HomePage,
 });
 
-const BACKGROUND_VIDEOS = [
-  "https://cdn.coverr.co/videos/coverr-grapevine-in-italy-5448/1080p.mp4",      // Vigneti in Italia (Campagna e Agricoltura)
-  "https://cdn.coverr.co/videos/coverr-lago-di-braies-4640/1080p.mp4",          // Lago di Braies (Lago e Montagna)
-  "https://cdn.coverr.co/videos/coverr-amalfi-coast-9252/1080p.mp4",            // Costiera Amalfitana (Mare e Scogliere)
-  "https://cdn.coverr.co/videos/coverr-fiordo-di-furore-3363/1080p.mp4"          // Fiordo di Furore (Natura e Rocce)
-];
-
 function HomePage() {
-  const [videoIndex, setVideoIndex] = useState(0);
   const { data: news } = useSuspenseQuery(latestNewsQueryOptions);
   const featured = news[0];
   const rest = news.slice(1, 4);
@@ -44,28 +35,6 @@ function HomePage() {
       <SiteHeader />
 
       <main>
-        {/* Video intro section */}
-        <section className="relative h-screen w-full overflow-hidden bg-background -mt-20">
-          <video
-            key={videoIndex}
-            autoPlay
-            muted
-            playsInline
-            aria-hidden="true"
-            className="absolute inset-0 w-full h-full object-cover"
-            src={BACKGROUND_VIDEOS[videoIndex]}
-            onEnded={() => setVideoIndex((prev) => (prev + 1) % BACKGROUND_VIDEOS.length)}
-            poster="https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=1920&q=80"
-          />
-          <div className="absolute inset-0 bg-white/10 backdrop-blur-[1px]" aria-hidden="true" />
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <img
-              src="/logo-mark.png"
-              alt="LivingLab Sicani"
-              className="w-[260px] md:w-[360px] lg:w-[420px] h-auto drop-shadow-2xl"
-            />
-          </div>
-        </section>
 
         {/* Hero */}
         <section className="pt-16 pb-24 px-6 relative overflow-hidden">
