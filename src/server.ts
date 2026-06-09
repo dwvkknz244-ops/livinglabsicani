@@ -86,10 +86,7 @@ export default {
           }
         }
         
-        // Debug: throw an error to see what env actually contains
-        if (!(env as any).SUPABASE_URL) {
-          throw new Error("DEBUG_ENV_KEYS: " + Object.keys(env).join(", "));
-        }
+        // We removed the debug throw since we are now injecting env variables statically at build time
       }
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);

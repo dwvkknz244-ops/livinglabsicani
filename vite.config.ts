@@ -10,5 +10,9 @@ export default defineConfig({
   },
   vite: {
     plugins: [cloudflare({ viteEnvironment: { name: "ssr" } })],
+    define: {
+      "process.env.SUPABASE_URL": JSON.stringify(process.env.SUPABASE_URL || ""),
+      "process.env.SUPABASE_SERVICE_ROLE_KEY": JSON.stringify(process.env.SUPABASE_SERVICE_ROLE_KEY || "")
+    }
   },
 });
