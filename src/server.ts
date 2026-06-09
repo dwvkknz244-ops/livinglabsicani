@@ -75,7 +75,16 @@ export default {
         (globalThis as any).process = { env: {} };
       }
       if (typeof env === 'object' && env !== null) {
-        Object.assign(process.env, env);
+        try {
+          Object.assign(process.env, env);
+        } catch (e) {
+          // Fallback if process.env is read-only
+          for (const key of Object.keys(env)) {
+            try {
+              (process.env as any)[key] = (env as any)[key];
+            } catch (e2) {}
+          }
+        }
       }
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
