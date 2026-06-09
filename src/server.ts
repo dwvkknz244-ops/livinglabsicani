@@ -69,6 +69,12 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
+      if (typeof process === 'undefined') {
+        (globalThis as any).process = { env: {} };
+      }
+      if (typeof env === 'object' && env !== null) {
+        Object.assign(process.env, env);
+      }
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
       return await normalizeCatastrophicSsrResponse(response);
