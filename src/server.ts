@@ -85,6 +85,11 @@ export default {
             } catch (e2) {}
           }
         }
+        
+        // Debug: throw an error to see what env actually contains
+        if (!(env as any).SUPABASE_URL) {
+          throw new Error("DEBUG_ENV_KEYS: " + Object.keys(env).join(", "));
+        }
       }
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
